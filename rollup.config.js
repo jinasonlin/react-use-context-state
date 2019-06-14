@@ -21,7 +21,11 @@ export default {
     peerDepsExternal(),
     babel({ exclude: 'node_modules/**' }),
     resolve(),
-    commonjs(),
+    commonjs({
+      namedExports: {
+        'react': ['createContext', 'useContext', 'useReducer', 'useEffect', 'useCallback']
+      }
+    }),
     terser(),
   ],
 };
