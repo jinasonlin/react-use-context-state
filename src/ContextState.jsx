@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
+import React, { PureComponent, createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 
 const ContextStateDefaultVaule = [{}, () => { console.warn('use ContextStateProvider'); }];
 const ContextState = createContext(ContextStateDefaultVaule);
 
 export const useContextState = () => useContext(ContextState);
 
-export const useGlobalMember = (key, initialState) => {
+export const useContextStateMember = (key, initialState) => {
   const [state, dispatch] = useContext(ContextState);
   const setState = useCallback((value) => {
     dispatch({ [key]: value });
@@ -23,12 +23,12 @@ export const useGlobalMember = (key, initialState) => {
         setState(initialState);
       }
     }
-  }, [key, dispatch]);
+  }, [key, dispatch]); // eslint-disable-line
 
   return [state[key], setState];
 };
 
-export const useGlobalMemberReady = (...keys) => {
+export const useContextStateMemberReady = (...keys) => {
   const [state] = useContext(ContextState);
   const isReady = keys.every(k => k in state);
 
@@ -44,6 +44,24 @@ export const ContextStateProvider = ({ children }) => {
     </ContextState.Provider>
   );
 };
+
+export class ContextStateProviderLegacy extends PureComponent {
+  state = ContextStateDefaultVaule[0];
+
+  dispatch = (next) => {
+    // 忽略函数式更新
+    typeof next !== 'function' && this.setState(next);
+  }
+
+  render() {
+    const { children } = this.props;
+    return (
+      <ContextState.Provider value={[this.state, this.dispatch]}>
+        {children}
+      </ContextState.Provider>
+    );
+  }
+}
 
 export const ContextStateConsumer = ({ children }) => {
   return (
