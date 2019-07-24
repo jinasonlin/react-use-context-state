@@ -4,12 +4,17 @@
   "description": "ContextState",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build:rollup && npm run build:glove && npm run build:babel",
+    "build:rollup": "rollup -c",
+    "build:babel": "babel src/ContextState.jsx -o dist/glove/index.es.js",
+    "build:glove": "za-glove build glove.cjs.js glove.umd.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.5.5",
     "@babel/core": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.4.5",

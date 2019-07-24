@@ -19,11 +19,14 @@ export default {
   ],
   plugins: [
     peerDepsExternal(),
-    babel({ exclude: 'node_modules/**' }),
+    babel({
+      exclude: 'node_modules/**',
+      // externalHelpers: true,
+    }),
     resolve(),
     commonjs({
       namedExports: {
-        'react': ['createContext', 'useContext', 'useReducer', 'useEffect', 'useCallback']
+        'react': ['PureComponent', 'createContext', 'useContext', 'useReducer', 'useEffect', 'useCallback']
       }
     }),
     terser(),
