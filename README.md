@@ -1,11 +1,14 @@
 ContextState
 ---
 
-用于全局状态管理
+上下文状态
+
+#### 使用
 
 ```javascript
-import React, { render, useEffect } from 'react';
-import { ContextStateProvider, useContextState } from '../ContextState';
+import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { ContextStateProvider, useContextState } from 'ContextState';
 
 const App = () => {
   const [state, setState] = useContextState();
@@ -16,7 +19,7 @@ const App = () => {
       setState({
         say: 'Hello',
       });
-    }, 1000);
+    }, 3000);
   }, []);
 
   return <div>App: {say}</div>;
@@ -29,12 +32,41 @@ const Other = () => {
   return <div>Other: {say}</div>;
 }
 
-render(
+ReactDOM.render(
   <ContextStateProvider>
     <App />
     <Other />
-  </ContextStateProvider>
-  document.getElementById('app'),
+  </ContextStateProvider>,
+  document.getElementById('root'),
 )
+```
+
+#### 自定义
+
+```javascript
+import { useEffect } from 'react';
+import { useContextStateMember } from 'ContextState';
+
+export const useGlobalTag = () => {
+  const [state] = useContextStateMember('tag', (setTag) => {
+    setTimeout(() => {
+      setTag('global tag，未初始化时进行更新');
+    }, 4000);
+  });
+
+  return state;
+};
+
+export const useGlobalBag = () => {
+  const [state, setState] = useContextStateMember('bag');
+
+  useEffect(() => {
+    setTimeout(() => {
+      setState('global bag，每次使用都会更新');
+    }, 5000);
+  }, []);
+
+  return state;
+};
 
 ```
