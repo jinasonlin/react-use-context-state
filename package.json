@@ -2,7 +2,8 @@
   "name": "react-use-context-state",
   "version": "1.0.0",
   "description": "ContextState",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build:rollup && npm run build:glove && npm run build:babel",

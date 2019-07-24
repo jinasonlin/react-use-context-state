@@ -16,6 +16,15 @@ export default {
       format: 'cjs',
       exports: 'named',
     },
+    {
+      file: 'dist/index.umd.js',
+      format: 'umd',
+      name: 'ContextState',
+      exports: 'named',
+      globals: {
+        react: 'React',
+      }
+    },
   ],
   plugins: [
     peerDepsExternal(),
