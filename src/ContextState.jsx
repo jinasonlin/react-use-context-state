@@ -1,4 +1,4 @@
-import React, { PureComponent, createContext, useRef, useContext, useReducer, useEffect, useCallback } from 'react';
+import React, { PureComponent, createContext, useRef, useContext, useState, useEffect, useCallback } from 'react';
 
 const ContextStateDefaultVaule = [{}, () => { console.warn('use ContextStateProvider'); }];
 const ContextState = createContext(ContextStateDefaultVaule);
@@ -28,8 +28,12 @@ export const useContextState = () => useContext(ContextState);
 export const useContextStateMember = (key, initialState) => {
   const refMounted = useRefMounted();
   const [state, setState] = useContext(ContextState);
-  const _setState = useCallback((value) => {
-    setState({ [key]: value });
+  const _setState = useCallback((next) => {
+    if (typeof next === 'function') {
+      setState(prev => ({ [key]: next(prev[key]) }));
+    } else {
+      setState({ [key]: next });
+    }
   }, [key, setState]);
 
   useEffect(() => {
@@ -62,10 +66,17 @@ export const useContextStateMemberReady = (...keys) => {
 };
 
 export const ContextStateProvider = ({ children, defaultState }) => {
-  const [state, setState] = useReducer((s, n) => ({ ...s, ...n }), getDefaultState(defaultState));
+  const [state, setState] = useState(getDefaultState(defaultState));
+  const _setState = useCallback((next) => {
+    if (typeof next === 'function') {
+      setState(prev => ({ ...prev, ...next(prev) }));
+    } else {
+      setState(prev => ({ ...prev, ...next }));
+    }
+  }, [setState]);
 
   return (
-    <ContextState.Provider value={[state, setState]}>
+    <ContextState.Provider value={[state, _setState]}>
       {children}
     </ContextState.Provider>
   );
@@ -74,10 +85,7 @@ export const ContextStateProvider = ({ children, defaultState }) => {
 export class ContextStateProviderLegacy extends PureComponent {
   state = getDefaultState(this.props.defaultState);
 
-  _setState = (next) => {
-    // 忽略函数式更新
-    typeof next !== 'function' && this.setState(next);
-  };
+  _setState = next => this.setState(next);
 
   render() {
     const { children } = this.props;
