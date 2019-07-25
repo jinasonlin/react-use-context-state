@@ -40,14 +40,10 @@ export const useContextStateMember = (key, initialState) => {
     // useEffect will capture state
     // 因此认可多次应用该 hook 时，可能执行多次初始化数据（存在竞态关系）
     // 如果需要调整该方式，则需要自定义 hook，参考 example useGlobalBag
-    if (refMounted.current && !(key in state)) {
-      if (typeof initialState === 'function') {
-        if (initialState.length >= 1) {
-          initialState(_setState);
-        } else {
-          _setState(initialState());
-        }
-      } else if (initialState) {
+    if (refMounted.current && !(key in state) && initialState) {
+      if (typeof initialState === 'function' && initialState.length >= 1) {
+        initialState(_setState);
+      } else {
         _setState(initialState);
       }
     }
