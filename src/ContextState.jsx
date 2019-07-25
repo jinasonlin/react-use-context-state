@@ -3,6 +3,12 @@ import React, { PureComponent, createContext, useContext, useReducer, useEffect,
 const ContextStateDefaultVaule = [{}, () => { console.warn('use ContextStateProvider'); }];
 const ContextState = createContext(ContextStateDefaultVaule);
 
+const getDefaultState = (defaultState) => {
+  if (defaultState && typeof defaultState !== 'object') throw new Error('`defaultState` should be object');
+
+  return defaultState || ContextStateDefaultVaule[0];
+}
+
 export const useContextState = () => useContext(ContextState);
 
 export const useContextStateMember = (key, initialState) => {
@@ -35,8 +41,8 @@ export const useContextStateMemberReady = (...keys) => {
   return isReady;
 };
 
-export const ContextStateProvider = ({ children }) => {
-  const [state, dispatch] = useReducer((s, n) => ({ ...s, ...n }), ContextStateDefaultVaule[0]);
+export const ContextStateProvider = ({ children, defaultState }) => {
+  const [state, dispatch] = useReducer((s, n) => ({ ...s, ...n }), getDefaultState(defaultState));
 
   return (
     <ContextState.Provider value={[state, dispatch]}>
@@ -46,7 +52,7 @@ export const ContextStateProvider = ({ children }) => {
 };
 
 export class ContextStateProviderLegacy extends PureComponent {
-  state = ContextStateDefaultVaule[0];
+  state = getDefaultState(this.props.defaultState);
 
   dispatch = (next) => {
     // 忽略函数式更新
