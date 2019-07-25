@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { ContextStateProvider, ContextStateProviderLegacy } from '@/ContextState';
 import ExampleOne from './Example1';
 import ExampleTwo from './Example2';
 
 function App() {
+  const [showExampleTwo, toggleShowExampleTwo] = useState(true);
+
   return (
     <React.Fragment>
       <ContextStateProvider defaultState={{ A: 100 }}>
@@ -12,7 +14,10 @@ function App() {
           <h1>Example</h1>
           <ExampleOne />
         </div>
-        <ExampleTwo />
+        <div style={{ border: '1px solid gray', padding: 10 }}>
+          <button onClick={() => toggleShowExampleTwo(!showExampleTwo)}>toggle ExampleTwo</button>
+          { showExampleTwo && <ExampleTwo />}
+        </div>
       </ContextStateProvider>
       <hr />
       <hr />

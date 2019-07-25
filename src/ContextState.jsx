@@ -1,4 +1,4 @@
-import React, { PureComponent, createContext, useContext, useReducer, useEffect, useCallback } from 'react';
+import React, { PureComponent, createContext, useRef, useContext, useReducer, useEffect, useCallback } from 'react';
 
 const ContextStateDefaultVaule = [{}, () => { console.warn('use ContextStateProvider'); }];
 const ContextState = createContext(ContextStateDefaultVaule);
@@ -9,16 +9,31 @@ const getDefaultState = (defaultState) => {
   return defaultState || ContextStateDefaultVaule[0];
 };
 
+export const useRefMounted = () => {
+  const refMounted = useRef(false);
+
+  useEffect(() => {
+    refMounted.current = true;
+
+    return () => {
+      refMounted.current = false;
+    };
+  }, []);
+
+  return refMounted;
+};
+
 export const useContextState = () => useContext(ContextState);
 
 export const useContextStateMember = (key, initialState) => {
+  const refMounted = useRefMounted();
   const [state, setState] = useContext(ContextState);
   const _setState = useCallback((value) => {
     setState({ [key]: value });
   }, [key, setState]);
 
   useEffect(() => {
-    if (!(key in state)) {
+    if (refMounted.current && !(key in state)) {
       if (typeof initialState === 'function') {
         if (initialState.length >= 1) {
           initialState(_setState);
