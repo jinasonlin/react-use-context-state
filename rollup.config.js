@@ -23,7 +23,7 @@ export default {
       exports: 'named',
       globals: {
         react: 'React',
-      }
+      },
     },
   ],
   plugins: [
@@ -35,8 +35,8 @@ export default {
     resolve(),
     commonjs({
       namedExports: {
-        'react': ['PureComponent', 'createContext', 'useContext', 'useReducer', 'useEffect', 'useCallback']
-      }
+        react: ['PureComponent', 'createContext', 'useContext', 'useReducer', 'useEffect', 'useCallback'],
+      },
     }),
     terser(),
   ],

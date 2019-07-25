@@ -1,6 +1,6 @@
 {
   "name": "react-use-context-state",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "ContextState",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -14,8 +14,8 @@
     "build:glove": "za-glove build glove.cjs.js glove.umd.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Lin Qun",
+  "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.4.5",
