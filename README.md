@@ -37,7 +37,7 @@ ReactDOM.render(
     <App />
     <Other />
   </ContextStateProvider>,
-  document.getElementById('root'),
+  document.getElementById('app'),
 )
 ```
 
@@ -45,25 +45,28 @@ ReactDOM.render(
 
 ```javascript
 import { useEffect } from 'react';
-import { useContextStateMember } from 'ContextState';
+import { useRefMounted, useContextStateMember } from 'ContextState';
 
 export const useGlobalTag = () => {
   const [state] = useContextStateMember('tag', (setTag) => {
     setTimeout(() => {
       setTag('global tag，未初始化时进行更新');
-    }, 4000);
+    }, 1500);
   });
 
   return state;
 };
 
 export const useGlobalBag = () => {
+  const refMounted = useRefMounted(false);
   const [state, setState] = useContextStateMember('bag');
 
   useEffect(() => {
-    setTimeout(() => {
-      setState('global bag，每次使用都会更新');
-    }, 5000);
+    if (refMounted.current) {
+      setTimeout(() => {
+        setState('global bag，每次使用都会更新');
+      }, 3000);
+    }
   }, []);
 
   return state;

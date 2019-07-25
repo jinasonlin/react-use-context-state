@@ -33,6 +33,9 @@ export const useContextStateMember = (key, initialState) => {
   }, [key, setState]);
 
   useEffect(() => {
+    // useEffect will capture state
+    // 因此认可多次应用该 hook 时，可能执行多次初始化数据（存在竞态关系）
+    // 如果需要调整该方式，则需要自定义 hook，参考 example useGlobalBag
     if (refMounted.current && !(key in state)) {
       if (typeof initialState === 'function') {
         if (initialState.length >= 1) {
@@ -50,6 +53,8 @@ export const useContextStateMember = (key, initialState) => {
 };
 
 export const useContextStateMemberReady = (...keys) => {
+  Array.isArray(keys[0]) && ([keys] = keys);
+
   const [state] = useContext(ContextState);
   const isReady = keys.every(k => k in state);
 
