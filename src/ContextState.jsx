@@ -7,31 +7,31 @@ const getDefaultState = (defaultState) => {
   if (defaultState && typeof defaultState !== 'object') throw new Error('`defaultState` should be object');
 
   return defaultState || ContextStateDefaultVaule[0];
-}
+};
 
 export const useContextState = () => useContext(ContextState);
 
 export const useContextStateMember = (key, initialState) => {
-  const [state, dispatch] = useContext(ContextState);
-  const setState = useCallback((value) => {
-    dispatch({ [key]: value });
-  }, [key, dispatch]);
+  const [state, setState] = useContext(ContextState);
+  const _setState = useCallback((value) => {
+    setState({ [key]: value });
+  }, [key, setState]);
 
   useEffect(() => {
     if (!(key in state)) {
       if (typeof initialState === 'function') {
         if (initialState.length >= 1) {
-          initialState(setState);
+          initialState(_setState);
         } else {
-          setState(initialState());
+          _setState(initialState());
         }
       } else if (initialState) {
-        setState(initialState);
+        _setState(initialState);
       }
     }
-  }, [key, dispatch]); // eslint-disable-line
+  }, [key, setState]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return [state[key], setState];
+  return [state[key], _setState];
 };
 
 export const useContextStateMemberReady = (...keys) => {
@@ -42,10 +42,10 @@ export const useContextStateMemberReady = (...keys) => {
 };
 
 export const ContextStateProvider = ({ children, defaultState }) => {
-  const [state, dispatch] = useReducer((s, n) => ({ ...s, ...n }), getDefaultState(defaultState));
+  const [state, setState] = useReducer((s, n) => ({ ...s, ...n }), getDefaultState(defaultState));
 
   return (
-    <ContextState.Provider value={[state, dispatch]}>
+    <ContextState.Provider value={[state, setState]}>
       {children}
     </ContextState.Provider>
   );
@@ -54,15 +54,15 @@ export const ContextStateProvider = ({ children, defaultState }) => {
 export class ContextStateProviderLegacy extends PureComponent {
   state = getDefaultState(this.props.defaultState);
 
-  dispatch = (next) => {
+  _setState = (next) => {
     // 忽略函数式更新
     typeof next !== 'function' && this.setState(next);
-  }
+  };
 
   render() {
     const { children } = this.props;
     return (
-      <ContextState.Provider value={[this.state, this.dispatch]}>
+      <ContextState.Provider value={[this.state, this._setState]}>
         {children}
       </ContextState.Provider>
     );

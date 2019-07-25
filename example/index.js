@@ -14,8 +14,8 @@ function App() {
         </div>
         <ExampleTwo />
       </ContextStateProvider>
-      <hr/>
-      <hr/>
+      <hr />
+      <hr />
       <ContextStateProviderLegacy defaultState={{ B: 100 }}>
         <div>
           <h1>Legacy</h1>

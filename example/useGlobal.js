@@ -18,7 +18,7 @@ export const useGlobalBag = () => {
     setTimeout(() => {
       setState('global bag，每次使用都会更新');
     }, 8000);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return state;
 };
@@ -27,4 +27,4 @@ export const useGlobalReady = () => {
   const isReady = useContextStateMemberReady('tag', 'bag');
 
   return isReady;
-}
+};
