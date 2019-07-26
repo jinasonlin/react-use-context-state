@@ -1,6 +1,9 @@
 {
   "root": true,
   "extends": "za/react",
+  "env": {
+    "jest": true
+  },
   "rules": {
     "no-console": "off"
   }
